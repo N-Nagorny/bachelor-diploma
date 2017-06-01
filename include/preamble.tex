@@ -72,7 +72,10 @@
 \newcommand\fYee[3]{\hanglimitsoperator[l]{#1\Big|}{#2}{#3}~~~}
 \newcommand\yeediff[5]{\frac{\yee{#1}{#2}{#3} - \yee{#1}{#2}{#4}}{\Delta{#5}}}
 
-% Roman numbers
+% Точка в заголовках рисунков и таблиц
+\usepackage[labelsep=period]{caption}
+
+% Roman numerals
 \makeatletter
 \newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
@@ -81,7 +84,7 @@
 \usepackage[compact,explicit]{titlesec}
 \usepackage[dotinlabels]{titletoc} %Точки после номеров секций в содержании
 \titleformat{\section}{}{}{12.5mm}{\bfseries\thesection.\quad#1\vspace{1.5em}}
-\titleformat{\subsection}[block]{\vspace{1em}}{}{12.5mm}{\bfseries\thesubsection.\quad#1\vspace{1em}}
+\titleformat{\subsection}[block]{\vspace{1em}}{}{12.5mm}{\bfseries\thesubsection.\quad#1}
 \titleformat{\subsubsection}[block]{\vspace{1em}\normalsize}{}{12.5mm}{\thesubsubsection\quad#1\vspace{1em}}
 \titleformat{\paragraph}[block]{\normalsize}{}{12.5mm}{#1}
 
