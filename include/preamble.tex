@@ -72,6 +72,11 @@
 \newcommand\fYee[3]{\hanglimitsoperator[l]{#1\Big|}{#2}{#3}~~~}
 \newcommand\yeediff[5]{\frac{\yee{#1}{#2}{#3} - \yee{#1}{#2}{#4}}{\Delta{#5}}}
 
+% Roman numbers
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
 % Оформление заголовков
 \usepackage[compact,explicit]{titlesec}
 \usepackage[dotinlabels]{titletoc} %Точки после номеров секций в содержании
@@ -83,6 +88,9 @@
 % Секции без номеров (введение, заключение...), вместо section*{}
 \newcommand{\anonsection}[1]{
     \phantomsection % Корректный переход по ссылкам в содержании
-    \paragraph{\centerline{{#1}}\vspace{1.5em}}
+    \paragraph{\bfseries{{#1}}\vspace{1.5em}}
     \addcontentsline{toc}{section}{#1}
 }
+
+% Bibliography
+\bibliographystyle{ugost2008}
