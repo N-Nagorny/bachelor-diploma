@@ -1,5 +1,7 @@
 \documentclass[a4paper,14pt]{extarticle}
 
+\usepackage[nottoc,numbib]{tocbibind}
+
 \input{include/preamble} % Подключение преамбулы
 
 \begin{document}
@@ -11,5 +13,7 @@
 
 \input{include/0-intro} % Введение
 \input{include/1-method} % Метод конечных разностей во временной области
+\input{include/2-gpu} % Неспециализированные вычисления на графических процессорах
+\bibliography{include/bib/gpu}
 
 \end{document}
