@@ -1,6 +1,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
+\usepackage{subcaption}
+\usepackage{floatrow}
 \usepackage{fontspec} % XeTeX
 \usepackage{xunicode} % Unicode для XeTeX
 \usepackage{xltxtra}  % Верхние и нижние индексы
@@ -53,7 +55,8 @@
 
 % Содержание
 \usepackage{textcase}
-\usepackage{tocloft}
+\usepackage[subfigure]{tocloft}
+\renewcommand{\cfttoctitlefont}{\bfseries\vspace{1.5em}}
 \renewcommand{\cftsecfont}{\hspace{0pt}}            % Имена секций в содержании не жирным шрифтом
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Точки для секций в содержании
 \renewcommand\cftsecpagefont{\mdseries}             % Номера страниц не жирные
@@ -80,6 +83,10 @@
 \newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
 \makeatother
 
+% Code listings
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Листинг}
+
 % Оформление заголовков
 \usepackage[compact,explicit]{titlesec}
 \usepackage[dotinlabels]{titletoc} %Точки после номеров секций в содержании
@@ -95,5 +102,17 @@
     \addcontentsline{toc}{section}{#1}
 }
 
+\usepackage{listings} % Оформление исходного кода
+\lstset{
+    basicstyle=\small\ttfamily, % Размер и тип шрифта
+    breaklines=true, % Перенос строк
+    tabsize=2, % Размер табуляции
+    literate={--}{{-{}-}}2 % Корректно отображать двойной дефис
+}
+
 % Bibliography
+%\usepackage[russian]{babel}
+
+\renewcommand{\contentsname}{whatever}
+\renewcommand{\refname}{whatever}
 \bibliographystyle{ugost2008}
