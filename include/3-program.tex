@@ -74,9 +74,9 @@
 нии NVIDIA, но и AMD.
 
 Для облегчения работы с фреймворком OpenCL была использована библиотека EasyCL. Код расчёта компонент вектора магнитной напряжённости
-приведён на листинге~\ref{HGPU}.
+приведён на листинге~\ref{lst:HGPU}.
 
-\begin{lstlisting}[caption={Код расчёта компоненты вектора магнитной напряжённости на ГПУ},label={lst:HGPU},language=C++, float, floatplacement=p]
+\begin{lstlisting}[caption={Код расчёта компонент вектора магнитной напряжённости на ГПУ},label={lst:HGPU},language=C++, float, floatplacement=p]
 __kernel void calcH(int nx, int ny, int nz, float delta_x, float delta_y, float delta_z,
     __global float *Ex,
     __global float *Ey,
