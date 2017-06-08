@@ -8,6 +8,15 @@
 \usepackage{xltxtra}  % Верхние и нижние индексы
 \usepackage{pdfpages} % Вставка PDF
 
+% Move page numbers up
+\usepackage{fancyhdr}
+
+\fancyhf{}
+\chead{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{fancy}
+
+
 % Шрифты, xelatex
 \defaultfontfeatures{Ligatures=TeX}
 \setmainfont{Times New Roman}
@@ -56,6 +65,7 @@
 % Содержание
 \usepackage{textcase}
 \usepackage[subfigure]{tocloft}
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{fancy}}} 
 \renewcommand{\cfttoctitlefont}{\bfseries\vspace{1.5em}}
 \renewcommand{\cftsecfont}{\hspace{0pt}}            % Имена секций в содержании не жирным шрифтом
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Точки для секций в содержании
