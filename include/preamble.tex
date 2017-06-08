@@ -70,7 +70,9 @@
 \usepackage{textcase}
 \usepackage[subfigure]{tocloft}
 \AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{fancy}}} 
-\renewcommand{\cfttoctitlefont}{\bfseries\vspace{1.5em}}
+\renewcommand{\contentsname}{Содержание}
+\renewcommand{\cfttoctitlefont}{\hspace{175pt}\bfseries}
+\renewcommand{\cftaftertoctitle}{}
 \renewcommand{\cftsecfont}{\hspace{0pt}}            % Имена секций в содержании не жирным шрифтом
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Точки для секций в содержании
 \renewcommand\cftsecpagefont{\mdseries}             % Номера страниц не жирные
@@ -90,7 +92,9 @@
 \newcommand\yeediff[5]{\frac{\yee{#1}{#2}{#3} - \yee{#1}{#2}{#4}}{\Delta{#5}}}
 
 % Точка в заголовках рисунков и таблиц
-\usepackage[labelsep=period]{caption}
+\addto\captionsrussian{\renewcommand{\figurename}{Рисунок}}
+\usepackage[labelsep=endash]{caption}
+
 
 % Roman numerals
 \makeatletter
@@ -123,6 +127,7 @@
     tabsize=2, % Размер табуляции
     literate={--}{{-{}-}}2 % Корректно отображать двойной дефис
 }
+
 
 % Bibliography
 \renewcommand{\contentsname}{whatever}
