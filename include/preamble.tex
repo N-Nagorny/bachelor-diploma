@@ -8,14 +8,6 @@
 \usepackage{xltxtra}  % Верхние и нижние индексы
 \usepackage{pdfpages} % Вставка PDF
 
-% Move page numbers up
-\usepackage{fancyhdr}
-
-\fancyhf{}
-\chead{\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\pagestyle{fancy}
-
 % Шрифты, xelatex
 \defaultfontfeatures{Ligatures=TeX}
 \setmainfont{Times New Roman}
@@ -41,6 +33,7 @@
 \renewcommand{\baselinestretch}{1.5} % Полуторный междустрочный интервал
 \parindent 1.25cm % Абзацный отступ
 
+
 \sloppy             % Избавляемся от переполнений
 \hyphenpenalty=1000 % Частота переносов
 \clubpenalty=10000  % Запрещаем разрыв страницы после первой строки абзаца
@@ -55,6 +48,14 @@
 
 \usepackage{lastpage}
 
+% Move page numbers up
+\usepackage{fancyhdr}
+
+\fancyhf{}
+\chead{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{fancy}
+
 % Списки
 \usepackage{enumitem}
 \setlist[enumerate,itemize]{leftmargin=12.7mm} % Отступы в списках
@@ -67,12 +68,14 @@
 \renewcommand{\labelenumi}{\asbuk{enumi})} % Список второго уровня
 \renewcommand{\labelenumii}{\arabic{enumii})} % Список третьего уровня
 
+\newcommand\centerThe[1]{\noindent\begin{center}#1\end{center}\par}
+
 % Содержание
 \usepackage{textcase}
 \usepackage[subfigure]{tocloft}
 \AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{fancy}}} 
 \renewcommand{\contentsname}{Содержание}
-\renewcommand{\cfttoctitlefont}{\hspace{175pt}\bfseries}
+\renewcommand{\cfttoctitlefont}{\bfseries\centerThe}
 \renewcommand{\cftaftertoctitle}{}
 \renewcommand{\cftsecfont}{\hspace{0pt}}            % Имена секций в содержании не жирным шрифтом
 \renewcommand\cftsecleader{\cftdotfill{\cftdotsep}} % Точки для секций в содержании
@@ -136,7 +139,6 @@
     tabsize=2, % Размер табуляции
     literate={--}{{-{}-}}2 % Корректно отображать двойной дефис
 }
-
 
 % Bibliography
 \renewcommand{\contentsname}{whatever}
