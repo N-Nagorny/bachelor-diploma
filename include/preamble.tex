@@ -117,6 +117,10 @@
 \newcommand{\anonsection}[1]{
     \phantomsection % Корректный переход по ссылкам в содержании
     \paragraph{\bfseries{{#1}}\vspace{1.5em}}
+%Appendix section
+\newcommand{\appendsection}[1]{
+    \phantomsection % Корректный переход по ссылкам в содержании
+    \paragraph{\hfill\bfseries{#1}}
     \addcontentsline{toc}{section}{#1}
 }
 
