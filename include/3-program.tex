@@ -40,6 +40,53 @@
 значений проекции вектора $ \vec{E} $ на ось~$ Z $. Во избежание проверки каждой ячейки на наличие там проводящих структур было принято решение сохранять информацию обо всех ячейках до расчёта значений вектора электрической напряжённости, затем выполнять этот расчёт и, наконец, пересчёт значений проекции
 вектора~$ \vec{E} $ на ось~$ Z $ только в точках присутствия элементов источника.
 
+\begin{figure}[p]
+    \centering
+    \vspace{30mm}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image6}
+
+        \label{fieldFig:1st}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image7}
+  
+        \label{fieldFig:2nd}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image8}
+
+        \label{fieldFig:3rd}
+    \end{subfigure}
+    
+\bigskip
+        \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image9}
+
+        \label{fieldFig:4th}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image10}
+  
+        \label{fieldFig:5th}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/image11}
+
+        \label{fieldFig:6th}
+    \end{subfigure}
+
+    \caption{Изменение электрического поля во времени (вид сверху)}\label{fig:animals}
+\end{figure}
+
 \subsection{Перенос вычислительной нагрузки на графический процессор}
 
 В целях увеличения производительности функции расчёта значений про-
@@ -51,5 +98,19 @@
 
 Для облегчения работы с фреймворком OpenCL была использована библиотека EasyCL. Код расчёта компонент вектора магнитной напряжённости
 приведён в приложении~Б.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{include/graphics/image12}
+\caption{Зависимость среднего времени расчёта компонент вектора магнитной напряжённости в конкретный момент времени во всех ячейках от размеров сетки}
+\label{fig:1stComparsion}
+\end{figure}
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{include/graphics/image13}
+\caption{Зависимость среднего времени расчёта компонент вектора электрической напряжённости в конкретный момент времени во всех ячейках от размеров сетки}
+\label{fig:2ndComparsion}
+\end{figure}
+
 
 \clearpage
