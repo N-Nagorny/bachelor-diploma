@@ -108,6 +108,17 @@
 % Code listings
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Листинг}
+\lstset{
+    basicstyle=\small\ttfamily, % Размер и тип шрифта
+    breaklines=true, % Перенос строк
+    tabsize=2, % Размер табуляции
+    literate={--}{{-{}-}}2 % Корректно отображать двойной дефис
+}
+
+% Bibliography items marking
+\makeatletter 
+\renewcommand\@biblabel[1]{#1.} 
+\makeatother
 
 % Оформление заголовков
 \usepackage[compact,explicit]{titlesec}
@@ -132,16 +143,3 @@
     \paragraph{\hfill\bfseries{#1}}
     \addcontentsline{toc}{section}{#1}
 }
-
-\usepackage{listings} % Оформление исходного кода
-\lstset{
-    basicstyle=\small\ttfamily, % Размер и тип шрифта
-    breaklines=true, % Перенос строк
-    tabsize=2, % Размер табуляции
-    literate={--}{{-{}-}}2 % Корректно отображать двойной дефис
-}
-
-% Bibliography
-\renewcommand{\contentsname}{whatever}
-\renewcommand{\refname}{whatever}
-\bibliographystyle{ugost2008}

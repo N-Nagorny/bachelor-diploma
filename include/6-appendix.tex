@@ -1,6 +1,6 @@
 \appendsection{Приложение А}
 
-\textbf{Код расчта компоненты вектора магнитной напряжнности на ЦПУ}
+\textbf{Код расчёта компоненты вектора $ \vec{H} $ на ЦПУ}
 
 \begin{lstlisting}[label={lst:HCPU},language=C++]
     int nx = grid.Hx.getCountX();
@@ -14,12 +14,12 @@
     for(int ix = 0; ix < nx-1; ix++)
     for(int iy = 0; iy < ny-1; iy++)
     for(int iz = 0; iz < nz-1; iz++) {
-        float& curHx      = grid.Hx          .at(ix,   iy,   iz);
-        float  curD_Hx    = grid.D_Hx        .at(ix,   iy,   iz);
-        float  curEz1     = grid.Ez          .at(ix,   iy+1, iz);
-        float  curEz0     = grid.Ez          .at(ix,   iy,   iz);
-        float  curEy1     = grid.Ey          .at(ix,   iy,   iz+1);
-        float  curEy0     = grid.Ey          .at(ix,   iy,   iz);
+        float& curHx	= grid.Hx		.at(ix,   iy,   iz);
+        float  curD_Hx	= grid.D_Hx	.at(ix,   iy,   iz);
+        float  curEz1	= grid.Ez		.at(ix,   iy+1, iz);
+        float  curEz0	= grid.Ez		.at(ix,   iy,   iz);
+        float  curEy1	= grid.Ey		.at(ix,   iy,   iz+1);
+        float  curEy0	= grid.Ey		.at(ix,   iy,   iz);
 
         curHx -= curD_Hx * ((curEz1 - curEz0) / delta_y -
                             (curEy1 - curEy0) / delta_z);
@@ -30,7 +30,7 @@
 
 \appendsection{Приложение Б}
 
-\textbf{Код расчта компоненты вектора магнитной напряжнности на ГПУ}
+\textbf{Код расчёта компоненты вектора $ \vec{H} $ на ГПУ}
 
 \begin{lstlisting}[label={lst:HGPU},language=C++]
 __kernel void calcH(int nx, int ny, int nz, float delta_x, float delta_y, float delta_z,
@@ -49,19 +49,17 @@ __kernel void calcH(int nx, int ny, int nz, float delta_x, float delta_y, float 
     int iz = get_global_id(2);
 
     int idx = ix * ny * nz + iy * nz + iz;
-
     int idx010 = ix * ny * nz + (iy + 1) * nz + iz;
     int idx001 = ix * ny * nz + iy * nz + (iz + 1);
     int idx100 = (ix + 1) * ny * nz + iy * nz + iz;
 
-        Hx[idx] -= D_Hx[idx] * ((Ez[idx010] - Ez[idx]) / delta_y -
+        Hx[idx] -= D_Hx[idx]*((Ez[idx010] - Ez[idx]) / delta_y -
                             (Ey[idx001] - Ey[idx]) / delta_z);
 
-        Hy[idx] -= D_Hy[idx] * ((Ex[idx001] - Ex[idx]) / delta_z -
+        Hy[idx] -= D_Hy[idx]*((Ex[idx001] - Ex[idx]) / delta_z -
                             (Ez[idx100] - Ez[idx]) / delta_x);
 
-
-        Hz[idx] -= D_Hz[idx] * ((Ey[idx100] - Ey[idx]) / delta_x -
+        Hz[idx] -= D_Hz[idx]*((Ey[idx100] - Ey[idx]) / delta_x -
                             (Ex[idx010] - Ex[idx]) / delta_y);
 }
 \end{lstlisting}

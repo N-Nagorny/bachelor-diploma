@@ -144,9 +144,382 @@
 \Delta{t} < \frac{1}{c\sqrt{\frac{1}{\Delta{x}^2} + \frac{1}{\Delta{y}^2} + \frac{1}{\Delta{z}^2}}}
 \end{align*}
 
-% TODO: Replace quotation mark
+Пересчёт значений компонент выполняется <<на месте>>, то есть рассчитанное в каждый последующий момент времени значение помещается в ту же ячейку сетки И, в которой находилось значение для предыдущего момента. Это позволяет несколько снизить требования к оперативной памяти, предъявляемые методом.
 
-Пересчёт значений компонент выполняется «на месте», то есть рассчитанное в каждый последующий момент времени значение помещается в ту же ячейку сетки И, в которой находилось значение для предыдущего момента. Это позволяет несколько снизить требования к оперативной памяти, предъявляемые методом.
+Однако приведённые выше базовые уравнения пригодны только для
+бесконечной счётной области. Очевидно, произвести расчёт в такой области за конечное время невозможно, но существуют методы,
+позволяющие получать решение электродинамической задачи при ограниченном счётном объёме. Среди них наибольшее распространение получили 
+граничные условия идеального отражения и система \textit{идеально согласованных слоёв} (\textit{PML}).
+
+Использование первого из этих методов приводит к многократному переотражению
+сигнала внутри счётной области, два других позволяют уменьшить отражение волны
+от границы. Граничные условия поглощения намного проще, чем PML, однако система
+согласованных слоёв позволяет достичь на порядки меньшего
+коэффициента отражения от границы.
+
+\subsection{Условия идеального отражения}
+
+Предположим, счётный объём окружён бесконечным идеальным проводником. Тогда 
+напряжённости поля за пределами счётной области будут нулевыми, а 
+электромагнитные волны, достигающие границ счётного объёма, будут полностью отражаться вовнутрь.
+
+На практике это условие реализуется очень просто: счетный объём окружается
+дополнительным слоем ячеек, поле в которых изначально
+инициализируется нулями и никогда не высчитывается.
+
+Однако данные граничные условия имеют серьёзный недостаток: чтобы отражённая от 
+границ счётной области волна не вносила существенных искажений в происходящие внутри неё физические процессы, границы должны находиться достаточно далеко от интересующей нас области. Однако увеличение счётного объёма приводит к 
+существенному увеличению времени расчёта и объёму оперативной памяти.
+
+\subsection{Граничные условия PML}
+
+Данный тип граничных условий (строго говоря, являющихся поглощающей приграничной областью, а не граничным условием, как таковым) обладает одними из лучших
+характеристик. При использовании PML счетная область
+окружается слоем анизотропного поглощающего материала, обладающий рядом свойств,
+подробно описанных ниже.
+
+На границе раздела «счетная область --- согласованный слой» волновое
+сопротивление не изменяется, что достигается выполнением следующего соотношения:
+%%
+\begin{equation}
+\label{eq:EpsilonAndMu}
+\frac{\sigma}{\varepsilon} = \frac{\sigma^*}{\mu}.
+\end{equation}
+
+
+Электрическая и магнитная проводимость возрастают с увеличением расстояния
+вглубь слоя PML по некоторому закону, называемому \emph{профилем потерь}~\ref{fig:PML}.
+
+% Рисунок 2 -- PML
+\begin{figure}[p]
+\centering
+\includegraphics[width=1\textwidth]{include/graphics/pml}
+\caption{PML}
+\label{fig:PML}
+\end{figure}
+
+В оригинальной работе Беренже был предложен следующий профиль потерь, как
+оптимальный по уровню отражения от границы
+раздела:
+%%
+\begin{itemize}
+
+\item для электрической проводимости:
+\begin{align}
+\label{eq:LossProfile}
+\sigma_\text{PML}(i) &= \left\{
+\begin{array}{ll}
+    \sigma_\text{PML0}\frac{\sqrt{g}-1}{\ln{g}}     & \text{при~} i=0,\\
+    \sigma_\text{PML0}\frac{g-1}{\sqrt{g}\ln{g}}g^i & \text{при~} i=\frac12,1,\frac32,~\ldots
+\end{array}
+\right.\\
+\sigma_\text{PML0} &= -\frac{\epsilon_0 \ln{g}} {2 d \epsilon_0\mu_0 (g^N-1)} \ln{r};
+% NOTE: Здесь применена особая уличная магия.
+\intertext{\item для магнитной проводимости:}
+%\begin{align}
+    \sigma^{*}_\text{PML}(i) &= \frac{\mu}{\epsilon} \sigma_\text{PML}(i).
+\end{align}
+
+\end{itemize}
+
+\noindent
+В приведенной выше формуле фигурируют следующие величины:
+\begin{itemize}[label={}]
+\item $g$ --- параметр, подбираемый эмпирически;
+\item $r$ --- требуемый коэффициент отражения;
+\item $d$ --- интервал дискретизации пространства в данном направлении;
+\item $N$ --- толщина слоя PML.
+\end{itemize}
+
+\noindent
+Приблизительная оценка толщины слоя PML может быть получена из следующего
+соотношения:
+\begin{equation}
+\label{eq:hz1}
+    N_\text{min}= \frac{1}{\ln g}
+    \left[
+        1 - \frac{\Theta t_p(\sqrt{g}-1)}{4\pi d \sqrt{\epsilon_0\mu_0}} \ln{r}
+    \right],
+\end{equation}
+где $t_p$ --- длительность процесса моделирования во времени,
+а параметр~$\Theta$ подбираются эмпирически (обычно $\Theta\approx10$).
+
+При использовании системы идеально согласованных слоев область допустимых частот
+становится ограниченной снизу. Сигналы с частотой, меньшей чем некоторое
+значение $f_{min}$ (называемое \emph{частотой отсечки}), отражаются от границы
+PML. Ниже приведено выражение для частоты отсечки:
+\begin{equation}
+    \label{eq:PmlCutoffFrequency}
+    f_{min} = \frac{\sigma_\text{PML}(0)}{2\pi\epsilon_0}.
+\end{equation}
+
+
+\subsection{Базовые уравнения PML}
+
+Основная идея получения базовых уравнений для расчета компонентов поля
+в согласованном слое состоит в том, что компоненты векторов $\vec{E}$
+и $\vec{H}$ представляются в виде суммы двух слагаемых:
+\begin{align}
+\label{eq:PmlSplitFieldEquations}
+    E_x = E_{xy}+E_{xz}, \\
+    E_y = E_{yx}+E_{yz}, \\
+    E_z = E_{zx}+E_{zy}, \\
+    H_x = H_{xy}+H_{xz}, \\
+    H_y = H_{yx}+H_{yz}, \\
+    H_z = H_{zx}+H_{zy}.
+\end{align}
+% TODO: Доверстать этот пиздец.
+% \begin{пиздец}
+\begin{eqnarray}
+\label{eq:pml13}
+%---
+\left\{
+\begin{array}{rcl}
+  %--- xy
+  \varepsilon \frac{\partial}{\partial t}E_{xy} + \sigma_y E_{xy} & = & \frac{\partial}{\partial y}(H_{zx}+H_{zy}) \\
+  %--- xz
+  \varepsilon \frac{\partial}{\partial t}E_{xz} + \sigma_z E_{xz} & = & \frac{\partial}{\partial z}(H_{yz}+H_{yx}) \\
+  %--- yz
+  \varepsilon \frac{\partial}{\partial t}E_{yz} + \sigma_z E_{yz} & = & \frac{\partial}{\partial z}(H_{xy}+H_{xz}) \\
+  %--- yx
+  \varepsilon \frac{\partial}{\partial t}E_{yx} + \sigma_x E_{yx} & = & \frac{\partial}{\partial x}(H_{zx}+H_{zy}) \\
+  %--- zx
+  \varepsilon \frac{\partial}{\partial t}E_{zx} + \sigma_x E_{zx} & = & \frac{\partial}{\partial x}(H_{yx}+H_{yz}) \\
+  %--- zy
+  \varepsilon \frac{\partial}{\partial t}E_{zy} + \sigma_y E_{zy} & = & \frac{\partial}{\partial y}(H_{xy}+H_{xz}) \\
+\end{array}
+\right.
+  \\ %-------------------------------
+\left\{
+\begin{array}{rcl}
+  %--- xy
+  \varepsilon \frac{\partial}{\partial t}H_{xy} + \sigma_y^* H_{xy} & = & \frac{\partial}{\partial y}(E_{zx}+E_{zy}) \\
+  %--- xz
+  \varepsilon \frac{\partial}{\partial t}H_{xz} + \sigma_z^* H_{xz} & = & \frac{\partial}{\partial z}(E_{yz}+E_{yx}) \\
+  %--- yz
+  \varepsilon \frac{\partial}{\partial t}H_{yz} + \sigma_z^* H_{yz} & = & \frac{\partial}{\partial z}(E_{xy}+E_{xz}) \\
+  %--- yx
+  \varepsilon \frac{\partial}{\partial t}H_{yx} + \sigma_x^* H_{yx} & = & \frac{\partial}{\partial x}(E_{zx}+E_{zy}) \\
+  %--- zx
+  \varepsilon \frac{\partial}{\partial t}H_{zx} + \sigma_x^* H_{zx} & = & \frac{\partial}{\partial x}(E_{yx}+E_{yz}) \\
+  %--- zy
+  \varepsilon \frac{\partial}{\partial t}H_{zy} + \sigma_y^* H_{zy} & = & \frac{\partial}{\partial y}(E_{xy}+E_{xz}) \\
+\end{array}
+\right.
+\end{eqnarray}
+
+Анизотропия согласованного слоя проявляется в следующем: каждой ячейке соответствует набор $(\sigma_x,\sigma_y,\sigma_z)$, причем элемент $\sigma_\alpha$ ($\alpha={x,y,z}$) не равен нулю только для ячеек слоя, пересекаемого соответствующей осью координат.
+
+
+В дискретной форме уравнения (\ref{eq:pml13}) выглядят следующим образом:
+\begin{equation}
+\left\{
+\begin{aligned}
+H_{xy (i,j,k)}^{n+1} = D_{ay (i,j,k)} H_{xy (i,j,k)}^{n} - D_{by (i,j,k)}
+\left[
+    \frac{E_{z (i,j+1,k)}^n - E_{z (i,j,k)}^n}{\Delta y}
+\right] \\
+%---
+H_{xz (i,j,k)}^{n+1} = D_{az (i,j,k)} H_{xz (i,j,k)}^{n} - D_{bz (i,j,k)}
+\left[
+    \frac{E_{y (i,j,k+1)}^n - E_{y (i,j,k)}^n}{\Delta z}
+\right] \\
+%---
+H_{yx (i,j,k)}^{n+1} = D_{ax (i,j,k)} H_{yx (i,j,k)}^{n} - D_{bx (i,j,k)}
+\left[
+    \frac{E_{z (i+1,j,k)}^n - E_{z (i,j,k)}^n}{\Delta x}
+\right] \\
+%---
+H_{yz (i,j,k)}^{n+1} = D_{az (i,j,k)} H_{yz (i,j,k)}^{n} - D_{bz (i,j,k)}
+\left[
+    \frac{E_{x (i,j,k+1)}^n - E_{x (i,j,k)}^n}{\Delta z}
+\right] \\
+%---
+H_{zx (i,j,k)}^{n+1} = D_{ax (i,j,k)} H_{zx (i,j,k)}^{n} - D_{bx (i,j,k)}
+\left[
+    \frac{E_{y (i+1,j,k)}^n - E_{z (i,j,k)}^n}{\Delta x}
+\right] \\
+%---
+H_{zy (i,j,k)}^{n+1} = D_{ay (i,j,k)} H_{zy (i,j,k)}^{n} - D_{by (i,j,k)}
+\left[
+    \frac{E_{x (i,j+1,k)}^n - E_{x (i,j,k)}^n}{\Delta y}
+\right]
+\end{aligned}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\{
+\begin{aligned}
+E_{xy (i,j,k)}^{n+1} = C_{ay (i,j,k)} E_{xy (i,j,k)}^{n} - C_{by (i,j,k)}
+\left[
+    \frac{H_{z (i,j,k)}^{n+1} - H_{z (i,j-1,k)}^{n+1}}{\Delta y}
+\right] \\
+%---
+E_{xz (i,j,k)}^{n+1} = C_{az (i,j,k)} E_{xz (i,j,k)}^{n} - C_{bz (i,j,k)}
+\left[
+    \frac{H_{y (i,j,k)}^{n+1} - H_{y (i,j,k-1)}^{n+1}}{\Delta z}
+\right] \\
+%---
+E_{yx (i,j,k)}^{n+1} = C_{ax (i,j,k)} E_{yx (i,j,k)}^{n} - C_{bx (i,j,k)}
+\left[
+    \frac{H_{z (i,j,k)}^{n+1} - H_{z (i-1,j,k)}^{n+1}}{\Delta x}
+\right] \\
+%---
+E_{yz (i,j,k)}^{n+1} = C_{az (i,j,k)} E_{yz (i,j,k)}^{n} - C_{bz (i,j,k)}
+\left[
+    \frac{H_{x (i,j,k)}^{n+1} - H_{x (i,j,k-1)}^{n+1}}{\Delta z}
+\right] \\
+%---
+E_{zx (i,j,k)}^{n+1} = C_{ax (i,j,k)} E_{zx (i,j,k)}^{n} - C_{bx (i,j,k)}
+\left[
+    \frac{H_{y (i,j,k)}^{n+1} - H_{z (i-1,j,k)}^{n+1}}{\Delta x}
+\right] \\
+%---
+E_{zy (i,j,k)}^{n+1} = C_{ay (i,j,k)} E_{zy (i,j,k)}^{n} - C_{by (i,j,k)}
+\left[
+    \frac{H_{x (i,j,k)}^{n+1} - H_{x (i,j-1,k)}^{n+1}}{\Delta y}
+\right]
+\end{aligned}
+\right.
+\end{equation}
+
+Где коэффициенты~$C$ и~$D$ находятся по формулам:
+\begin{equation*}
+\begin{aligned}
+D_{ax (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{x (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{x (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{bx (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{x (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\quad
+\begin{aligned}
+D_{ay (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{y (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{y (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{by (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{y (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\quad
+\begin{aligned}
+D_{az (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{z (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{z (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{bz (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{z (i,j,k)}^*\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\end{equation*}
+
+\begin{equation*}
+\begin{aligned}
+D_{ax (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{x (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{x (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{bx (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{x (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\quad
+\begin{aligned}
+D_{ay (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{y (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{y (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{by (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{y (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\quad
+\begin{aligned}
+D_{az (i,j,k)} =
+\frac
+{
+    1-\frac{\sigma_{z (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{z (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+}, \\
+%---
+D_{bz (i,j,k)} =
+\frac
+{
+    \frac{\Delta t}{\mu_{(i,j,k)}}
+}{
+    1+\frac{\sigma_{z (i,j,k)}\Delta t}{2\mu_{(i,j,k)}}
+},
+\end{aligned}
+%---------------
+\end{equation*}
+
+% \end{пиздец}
+
+Следует заметить, что в реальной ситуации всегда присутствуют
+отражения.
+Они складываются из:
+\begin{itemize}
+  \item отражений от первого слоя PML;
+  \item отражений между слоями PML;
+  \item отражений от проводящей границы за последним слоем PML.
+\end{itemize}
+
+\noindent
+В связи с этим, для уменьшения отражения от первого слоя значение~$\sigma_0$
+специально выбирается небольшим. Отражения между слоями подавляются за счет
+ограничения скорости роста профиля потерь. Для уменьшения влияния волны,
+отраженной от бесконечно проводящей границы, увеличивается число слоев
+PML.
 
 \subsection{Точечный резистивный источник}
 
@@ -214,5 +587,4 @@
 \end{equation*}
 
 Формулы для прочих компонент остаются неизменными.
-
 \clearpage
