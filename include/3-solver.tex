@@ -38,38 +38,72 @@
 
 Следующим этапом моделирования резистивного источника стал пересчёт
 значений проекции вектора $ \vec{E} $ на ось~$ Z $. Во избежание проверки каждой ячейки на наличие там проводящих структур было принято решение сохранять информацию обо всех ячейках до расчёта значений вектора электрической напряжённости, затем выполнять этот расчёт и, наконец, пересчёт значений проекции
-вектора~$ \vec{E} $ на ось~$ Z $ только в точках присутствия элементов источника. Динамика изменения картины электрического поля во времени представлена на рис.~\ref{fig:Ezfield}.
+вектора~$ \vec{E} $ на ось~$ Z $ только в точках присутствия элементов источника.
+
+На рис.~\ref{fig:EzPmlOff} представлена динамика изменения картины электрического поля в счётном объёме с граничными условиями идеального отражения с течением времени, на рис.~\ref{fig:EzPmlOn}~--- с граничными условиями PML. Легко заметить, что в первом случае наблюдаются искажения, отсутствующие во втором, что наглядно показывает эффективность граничных условий PML.
 
 \begin{figure}[p]
     \centering
-    \vspace{30mm}
+%    \vspace{30mm}
     \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image6}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-0}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image7}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-1}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image8}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-2}
     \end{subfigure}
     
 \bigskip
         \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image9}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-3}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image10}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-4}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\textwidth]{include/graphics/image11}
+        \includegraphics[width=\textwidth]{include/graphics/pml-off-5}
     \end{subfigure}
 
-    \caption{Изменение электрического поля во времени (вид сверху)}\label{fig:Ezfield}
+    \caption{Изменение электрического поля во времени (без PML)}\label{fig:EzPmlOff}
 \end{figure}
+
+\begin{figure}[p]
+    \centering
+%    \vspace{30mm}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-0}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-1}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-2}
+    \end{subfigure}
+    
+\bigskip
+        \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-3}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-4}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{include/graphics/pml-on-5}
+    \end{subfigure}
+
+    \caption{Изменение электрического поля во времени (с PML)}\label{fig:EzPmlOn}
+\end{figure}
+
 
 \subsection{Перенос вычислительной нагрузки на графический процессор}
 
