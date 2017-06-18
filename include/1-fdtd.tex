@@ -247,47 +247,6 @@
     H_y = H_{yx}+H_{yz}, \\
     H_z = H_{zx}+H_{zy}.
 \end{align*}
-% TODO: Доверстать этот пиздец.
-% \begin{пиздец}
-\begin{eqnarray}
-\label{eq:pml13}
-%---
-\left\{
-\begin{array}{rcl}
-  %--- xy
-  \varepsilon \frac{\partial}{\partial t}E_{xy} + \sigma_y E_{xy} & = & \frac{\partial}{\partial y}(H_{zx}+H_{zy}) \\
-  %--- xz
-  \varepsilon \frac{\partial}{\partial t}E_{xz} + \sigma_z E_{xz} & = & - \frac{\partial}{\partial z}(H_{yz}+H_{yx}) \\
-  %--- yz
-  \varepsilon \frac{\partial}{\partial t}E_{yz} + \sigma_z E_{yz} & = & \frac{\partial}{\partial z}(H_{xy}+H_{xz}) \\
-  %--- yx
-  \varepsilon \frac{\partial}{\partial t}E_{yx} + \sigma_x E_{yx} & = & - \frac{\partial}{\partial x}(H_{zx}+H_{zy}) \\
-  %--- zx
-  \varepsilon \frac{\partial}{\partial t}E_{zx} + \sigma_x E_{zx} & = & \frac{\partial}{\partial x}(H_{yx}+H_{yz}) \\
-  %--- zy
-  \varepsilon \frac{\partial}{\partial t}E_{zy} + \sigma_y E_{zy} & = & - \frac{\partial}{\partial y}(H_{xy}+H_{xz}) \\
-\end{array}
-\right.
-\end{eqnarray}
-\begin{eqnarray}
-\label{eq:pml14}
-\left\{
-\begin{array}{rcl}
-  %--- xy
-  \mu \frac{\partial}{\partial t}H_{xy} + \sigma_y^* H_{xy} & = & - \frac{\partial}{\partial y}(E_{zx}+E_{zy}) \\
-  %--- xz
-  \mu \frac{\partial}{\partial t}H_{xz} + \sigma_z^* H_{xz} & = & \frac{\partial}{\partial z}(E_{yz}+E_{yx}) \\
-  %--- yz
-  \mu \frac{\partial}{\partial t}H_{yz} + \sigma_z^* H_{yz} & = & - \frac{\partial}{\partial z}(E_{xy}+E_{xz}) \\
-  %--- yx
-  \mu \frac{\partial}{\partial t}H_{yx} + \sigma_x^* H_{yx} & = & \frac{\partial}{\partial x}(E_{zx}+E_{zy}) \\
-  %--- zx
-  \mu \frac{\partial}{\partial t}H_{zx} + \sigma_x^* H_{zx} & = & - \frac{\partial}{\partial x}(E_{yx}+E_{yz}) \\
-  %--- zy
-  \mu \frac{\partial}{\partial t}H_{zy} + \sigma_y^* H_{zy} & = & \frac{\partial}{\partial y}(E_{xy}+E_{xz}) \\
-\end{array}
-\right.
-\end{eqnarray}
 
 Анизотропия согласованного слоя проявляется в следующем: каждой ячейке соответствует набор $(\sigma_x,\sigma_y,\sigma_z)$, причем элемент $\sigma_\alpha$ ($\alpha={x,y,z}$) не равен нулю только для ячеек слоя, пересекаемого соответствующей осью координат~(рис.~\ref{fig:PML}).
 
