@@ -187,21 +187,23 @@
 вглубь слоя PML по некоторому закону, называемому \emph{профилем потерь}.
 
 В оригинальной работе Беренже~\cite{Berenger} был предложен следующий профиль потерь, как оптимальный по уровню отражения от границы раздела:
-\begin{equation*}
-%\label{eq:LossProfile}
+\begin{equation}
+\label{eq:LossProfile1}
 \sigma_\text{PML}(i) = \left\{
 \begin{array}{ll}
     \sigma_\text{PML}(0)\frac{\sqrt{g}-1}{\ln{g}}     & \text{при~} i=0,\\
     \sigma_\text{PML}(0)\frac{g-1}{\sqrt{g}\ln{g}}g^i & \text{при~} i=\frac12,1,\frac32,~\ldots
 \end{array}
 \right.
-\end{equation*}
-\begin{equation*}
+\end{equation}
+\begin{equation}
+\label{eq:LossProfile2}
 \sigma_\text{PML}(0) = -\frac{\varepsilon_0 \ln{g}} {2 d \varepsilon_0\mu_0 (g^N-1)} \ln{r};\\
-\end{equation*}
-\begin{equation*}
-\sigma^{*}_\text{PML}(i) = \frac{\mu}{\epsilon} \sigma_\text{PML}(i).
-\end{equation*}
+\end{equation}
+\begin{equation}
+\label{eq:LossProfile3}
+\sigma^{*}_\text{PML}(i) = \frac{\mu}{\varepsilon} \sigma_\text{PML}(i).
+\end{equation}
 
 \noindent
 В приведенных выше формулах использованы следующие обозначения:
@@ -298,8 +300,9 @@
 \label{fig:PML}
 \end{figure}
 
-В дискретной форме системы уравнений (\ref{eq:pml13}) и (\ref{eq:pml14}) выглядят следующим образом:
-\begin{equation*}
+В дискретной форме системы уравнений для компонент электрической и магнитной напряжённости в области PML выглядят следующим образом:
+\begin{equation}
+\label{eq:PmlFormulas1}
 \left\{
 \begin{aligned}
 H_{xy (i,j,k)}^{n+1} = D_{ay (i,j,k)} H_{xy (i,j,k)}^{n} - D_{by (i,j,k)}
@@ -333,9 +336,10 @@ H_{zy (i,j,k)}^{n+1} = D_{ay (i,j,k)} H_{zy (i,j,k)}^{n} + D_{by (i,j,k)}
 \right].
 \end{aligned}
 \right.
-\end{equation*}
+\end{equation}
 
-\begin{equation*}
+\begin{equation}
+\label{eq:PmlFormulas2}
 \left\{
 \begin{aligned}
 E_{xy (i,j,k)}^{n+1} = C_{ay (i,j,k)} E_{xy (i,j,k)}^{n} + C_{by (i,j,k)}
@@ -369,7 +373,7 @@ E_{zy (i,j,k)}^{n+1} = C_{ay (i,j,k)} E_{zy (i,j,k)}^{n} - C_{by (i,j,k)}
 \right].
 \end{aligned}
 \right.
-\end{equation*}
+\end{equation}
 
 Коэффициенты~$C$ и~$D$ уравнениях выше вычисляются по формулам:
 \begin{equation*}
